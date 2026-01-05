@@ -1,35 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from 'react';
+import Table from './Table';
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+interface User {
+  id: number;
+  name: string;
+  age: number;
 }
 
-export default App
+const columns = [
+  { key: 'id', title: 'ID', width: 60, sortable: true },
+  { key: 'name', title: '姓名' },
+  { key: 'age', title: '年龄', sortable: true },
+];
+
+const mockData: User[] = Array.from({ length: 46 }, (_, i) => ({
+  id: i + 1,
+  name: `User-${i + 1}`,
+  age: 18 + (i % 20),
+}));
+
+function App() {
+  const [page, setPage] = useState(1);
+  return (
+    <div style={{ padding: 24 }}>
+      <h2>React Table Solo</h2>
+      <Table
+        data={mockData}
+        columns={columns}
+        page={page}
+        pageSize={8}
+        onPageChange={setPage}
+      />
+      <div style={{ marginTop: 16 }}>
+        <button onClick={() => setPage((p) => Math.max(1, p - 1))}>Prev</button>
+        <span style={{ margin: '0 8px' }}>{page}</span>
+        <button onClick={() => setPage((p) => p + 1)}>Next</button>
+      </div>
+    </div>
+  );
+}
+
+export default App;
